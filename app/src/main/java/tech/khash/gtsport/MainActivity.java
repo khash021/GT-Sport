@@ -10,6 +10,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
@@ -32,7 +34,7 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import tech.khash.gtsport.Model.Score;
-import tech.khash.gtsport.Utils.DocLoader;
+import tech.khash.gtsport.Utils.DocAsynkLoader;
 import tech.khash.gtsport.Utils.SaveLoad;
 
 import static tech.khash.gtsport.Utils.CreateCSV.getCsv;
@@ -128,7 +130,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void getData() {
         //load the page in the background
-        DocLoader docLoader = new DocLoader(new DocLoader.AsyncResponse() {
+        DocAsynkLoader docLoader = new DocAsynkLoader(new DocAsynkLoader.AsyncResponse() {
             @Override
             public void processFinish(Document doc) {
                 //extract the data
@@ -200,7 +202,7 @@ public class MainActivity extends AppCompatActivity {
                 scores = new ArrayList<>();
                 scores = loadScoresDb(this);
             } else {
-                if (scores.size() >1) {
+                if (scores.size() > 1) {
                     lastScore = scores.get(1);
                 } else {
                     lastScore = scores.get(0);
@@ -223,7 +225,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         textDr.setText(currentScore.getDrString());
+        animateView(textDr);
         textSr.setText(currentScore.getSrString());
+        animateView(textSr);
 
         //calculate delta
         int drDelta = currentScore.getDr() - lastScore.getDr();
@@ -232,7 +236,9 @@ public class MainActivity extends AppCompatActivity {
         //show delta
         String drDeltaString = String.format(Locale.US, "%,d", drDelta);
         textDeltaDr.setText(drDeltaString);
+        animateView(textDeltaDr);
         textDeltaSr.setText(String.valueOf(srDelta));
+        animateView(textDeltaSr);
 
         //show arrows only if it is not 0
         if (drDelta == 0) {
@@ -244,6 +250,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 imageDr.setImageResource(R.drawable.down);
             }
+            animateView(imageDr);
         }//if-else = 0
 
         if (srDelta == 0) {
@@ -255,8 +262,14 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 imageSr.setImageResource(R.drawable.down);
             }
+            animateView(imageSr);
         }//if-else = 0
     }//displayResults
+
+    private void animateView(View view) {
+        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+        view.startAnimation(animation);
+    }//animateView
 
     private int getDr(String s) {
         int sportIndex = s.indexOf("Sport Mode Performances");

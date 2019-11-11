@@ -7,7 +7,7 @@ import org.jsoup.nodes.Document;
 
 import java.io.IOException;
 
-public class DocLoader extends AsyncTask<String, Void, Document> {
+public class DocAsynkLoader extends AsyncTask<String, Void, Document> {
 
     public interface AsyncResponse {
         void processFinish(Document doc);
@@ -15,7 +15,7 @@ public class DocLoader extends AsyncTask<String, Void, Document> {
 
     private AsyncResponse delegate = null;
 
-    public DocLoader(AsyncResponse delegate) {
+    public DocAsynkLoader(AsyncResponse delegate) {
         this.delegate = delegate;
     }
 
