@@ -26,4 +26,14 @@ public class ExampleUnitTest {
         String result = String.format(Locale.US, "%,d", number);
         assertEquals(check, result);
     }
+
+    @Test
+    public void StringFormat2() {
+        String check = "0.500";
+
+        float number = 0.5f;
+        String numberString = String.valueOf(number);
+        String result = String.format("%.3f", number);
+        assertEquals(check, result);
+    }
 }

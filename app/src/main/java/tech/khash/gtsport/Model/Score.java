@@ -11,6 +11,8 @@ public class Score {
     private Integer srDelta = null, drDelta = null;
     private Boolean isClean = null;
     private Integer positionDelta = null, startPosition = null, finishPosition = null;
+    private Boolean hasPenalty = null;
+    private Float penalty = null;
 
 
     public Score() { }
@@ -68,6 +70,14 @@ public class Score {
         return finishPosition;
     }
 
+    public Boolean getHasPenalty() {
+        return hasPenalty;
+    }
+
+    public Float getPenalty() {
+        return penalty;
+    }
+
     //Setter Methods
 
     public void setSr(int sr) {
@@ -104,6 +114,14 @@ public class Score {
 
     public void setDate(String date) {
         this.date = date;
+    }
+
+    public void setHasPenalty(boolean b) {
+        hasPenalty = b;
+    }
+
+    public void setPenalty(float f) {
+        penalty = f;
     }
 
     public Boolean isClean() {

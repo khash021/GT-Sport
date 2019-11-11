@@ -5,6 +5,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
+import android.text.TextUtils;
 import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -33,12 +34,13 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = EditActivity.class.getSimpleName();
 
     private Score currentScore;
-    private Boolean isClean = null;
-    private EditText editstart, editFinish;
+    private Boolean isClean = null, hasPenalty = null;
+    private EditText editstart, editFinish, editPenalty;
     private TextView textPositionDelta, textDr, textSr, textDrDelta, textSrDelta;
     private ImageView imageDr, imageSr, imagePosition;
     private Integer startPosition = null, finishPosition = null, positionDelta = null;
     private boolean unsavedChanges = false;
+    private Float penaltyFloat = null;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -66,8 +68,9 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         editstart = findViewById(R.id.edit_start);
         editFinish = findViewById(R.id.edit_finish);
+        editPenalty = findViewById(R.id.edit_penalty);
 
-        //populate views
+        //populate views Image and Text
         textDr.setText(currentScore.getDrString());
         textSr.setText(currentScore.getSrString());
 
@@ -115,11 +118,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }
         }
 
-        //listeners
+        //checkbox
         CheckBox cleanBox = findViewById(R.id.check_clean);
         cleanBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                hideKeyboard();
                 isClean = isChecked;
                 unsavedChanges = true;
             }
@@ -129,6 +133,31 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             cleanBox.setChecked(clean);
         }
 
+        final CheckBox penaltyCheck = findViewById(R.id.check_penalty);
+        penaltyCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                hideKeyboard();
+                hasPenalty = true;
+                unsavedChanges = true;
+
+                //Change the color if it has penalty
+                if (isChecked) {
+                    penaltyCheck.setTextColor(getApplicationContext().getResources().getColor(R.color.red));
+                    editPenalty.setCursorVisible(true);
+                    editPenalty.requestFocus();
+                } else {
+                    editPenalty.setText(null);
+                    editPenalty.setCursorVisible(false);
+                }
+            }
+        });
+        final Boolean penalty = currentScore.getHasPenalty();
+        if (penalty != null) {
+            cleanBox.setChecked(true);
+        }
+
+        //Edit Texts
         editstart.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -190,6 +219,32 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        editPenalty.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                unsavedChanges = true;
+                try {
+                    String string = s.toString().trim();
+                    if (!TextUtils.isEmpty(string)) {
+                        penaltyFloat = Float.valueOf(s.toString());
+                        penaltyCheck.setChecked(true);
+                    }
+                } catch (Exception e) {
+                    Log.d(TAG, "Error", e);
+                }
+            }
+        });
+
         //add this listener so when the user presses enter, this gets called and we can hide the keyboard
         editstart.setOnKeyListener(new View.OnKeyListener() {
             @Override
@@ -219,11 +274,27 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
+        editPenalty.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                //check for the enter key
+                if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
+                    //enter key has been pressed and we hide the keyboard
+                    hideKeyboard();
+                    //return true to let it know we handled the event
+                    return true;
+                }
+                return false;
+            }
+        });
+
         editstart.setCursorVisible(false);
         editFinish.setCursorVisible(false);
+        editPenalty.setCursorVisible(false);
 
         editstart.setOnClickListener(this);
         editFinish.setOnClickListener(this);
+        editPenalty.setOnClickListener(this);
         textPositionDelta.setOnClickListener(this);
         textDr.setOnClickListener(this);
         textSr.setOnClickListener(this);
@@ -287,6 +358,21 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         if (finishPosition != null) {
             currentScore.setFinishPosition(finishPosition);
         }
+
+        if (hasPenalty != null) {
+            currentScore.setHasPenalty(hasPenalty);
+            if (penaltyFloat != null) {
+                currentScore.setPenalty(penaltyFloat);
+            } else {
+                try {
+                    penaltyFloat = Float.valueOf(editPenalty.toString());
+                    currentScore.setPenalty(penaltyFloat);
+                } catch (Exception e) {
+                    Log.d(TAG, "Error", e);
+                }
+            }//if-else null penalty
+        }
+
         SaveLoad.replaceScoreInDb(this, currentScore);
 
         Intent intent = new Intent(EditActivity.this, ListActivity.class);
@@ -305,6 +391,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 unsavedChanges = true;
                 editFinish.setCursorVisible(true);
                 return;
+            case R.id.edit_penalty:
+                unsavedChanges = true;
+                editPenalty.setCursorVisible(true);
+                return;
             case R.id.text_dr:
             case R.id.text_sr:
             case R.id.text_sr_delta:
@@ -315,6 +405,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.image_position:
                 editFinish.setCursorVisible(false);
                 editstart.setCursorVisible(false);
+                hideKeyboard();
                 return;
         }
     }//onClick

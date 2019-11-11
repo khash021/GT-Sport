@@ -13,7 +13,7 @@
 
 
     <color name="background3">#90caf9</color>
-    <color name="color_light">#bcf0ff</color>
+    <color name="color_light">#D2EDF8</color>
 
     <color name="blue_argb">#ff0000ff</color>
 
@@ -32,6 +32,7 @@
 
     <color name="black">#000000</color>
     <color name="grey">#8e939c</color>
+    <color name="grey_light">#D1D8FA</color>
     <color name="white">#ffffff</color>
     <color name="dark_grey">#3a3a3a</color>
 

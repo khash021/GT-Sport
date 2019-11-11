@@ -5,6 +5,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -107,6 +108,20 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
             }
         }
 
+        //penalty
+        Boolean hasPenalty = score.getHasPenalty();
+        if (hasPenalty != null) {
+            if (hasPenalty) {
+                Float penaltyFloat = score.getPenalty();
+                if (penaltyFloat != null) {
+                    holder.penaltyLayout.setVisibility(View.VISIBLE);
+                    String result = String.format("%.3f", penaltyFloat);
+                    result = "+" + result;
+                    holder.penaltyText.setText(result);
+                }//penalty float
+            }//if has penalty
+        }//if null penalty
+
     }//onBindViewHolder
 
     @Override
@@ -120,8 +135,10 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     //Inner class for the view holder
     class ScoreViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener{
         //our views
-        final TextView drText, srText, dateText, positionText, positionDetailText, srDelta, drDelta;
+        final TextView drText, srText, dateText, positionText, positionDetailText, srDelta, drDelta,
+        penaltyText;
         final ImageView cleanImage, positionImage, podiumImage;
+        final LinearLayout penaltyLayout;
 
         //constructor
         private ScoreViewHolder(View itemView) {
@@ -136,7 +153,9 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
             positionDetailText = itemView.findViewById(R.id.position_details);
             srDelta = itemView.findViewById(R.id.sr_delta);
             drDelta = itemView.findViewById(R.id.dr_delta);
+            penaltyLayout = itemView.findViewById(R.id.penalty_container);
             podiumImage = itemView.findViewById(R.id.image_podium);
+            penaltyText = itemView.findViewById(R.id.penalty_text);
 
             itemView.setOnLongClickListener(this);
         }//ScoreViewHolder
