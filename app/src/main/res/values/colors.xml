@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#03a9f4</color>
+    <color name="colorPrimaryDark">#007ac1</color>
+    <color name="colorPrimaryLight">#67daff</color>
+    <color name="colorAccent">#a003f4</color>
+
+    <color name="green">#00ff00</color>
+    <color name="red">#ff0000</color>
+
+    <!--Button-->
+    <color name="button">#d752ff</color>
+
+
+    <color name="background3">#90caf9</color>
+    <color name="color_light">#bcf0ff</color>
+
+    <color name="blue_argb">#ff0000ff</color>
+
+    <!--could work-->
+    <color name="colorAccentOctonary">#a003f4</color>
+    <!--maybe-->
+    <color name="colorAccentSecondary">#f45303</color>
+    <!--maybe-->
+    <color name="colorAccentTertiary">#03f44f</color>
+    <!--maybe-->
+    <color name="colorAccentQuinary">#f49003</color>
+    <!--maybe-->
+    <color name="colorAccentSenary">#f4cc03</color>
+
+    <color name="background_light">#bbdefb</color>
+
+    <color name="black">#000000</color>
+    <color name="grey">#8e939c</color>
+    <color name="white">#ffffff</color>
+    <color name="dark_grey">#3a3a3a</color>
+
+</resources>
