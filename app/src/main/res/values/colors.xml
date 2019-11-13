@@ -5,7 +5,8 @@
     <color name="colorPrimaryLight">#67daff</color>
     <color name="colorAccent">#a003f4</color>
 
-    <color name="green">#00ff00</color>
+<!--    <color name="green">#00d814</color>-->
+    <color name="green">#02ca14</color>
     <color name="red">#ff0000</color>
 
     <!--Button-->
