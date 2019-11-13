@@ -23,6 +23,7 @@ import android.widget.TextView;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.google.gson.Gson;
 
@@ -41,6 +42,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private Integer startPosition = null, finishPosition = null, positionDelta = null;
     private boolean unsavedChanges = false;
     private Float penaltyFloat = null;
+    private ConstraintLayout rootView;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,6 +58,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //find views
+        rootView = findViewById(R.id.root_view);
+
         textDr = findViewById(R.id.text_dr);
         textSr = findViewById(R.id.text_sr);
         textDrDelta = findViewById(R.id.text_dr_delta);
@@ -146,6 +150,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                     penaltyCheck.setTextColor(getApplicationContext().getResources().getColor(R.color.red));
                     editPenalty.setCursorVisible(true);
                     editPenalty.requestFocus();
+                    showKeyboard();
                 } else {
                     editPenalty.setText(null);
                     editPenalty.setCursorVisible(false);
@@ -267,6 +272,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
                     //enter key has been pressed and we hide the keyboard
                     hideKeyboard();
+                    editFinish.setCursorVisible(false);
+                    rootView.requestFocus();
                     //return true to let it know we handled the event
                     return true;
                 }
@@ -281,6 +288,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 if (keyCode == KeyEvent.KEYCODE_ENTER && event.getAction() == KeyEvent.ACTION_UP) {
                     //enter key has been pressed and we hide the keyboard
                     hideKeyboard();
+                    editPenalty.setCursorVisible(false);
+                    rootView.requestFocus();
                     //return true to let it know we handled the event
                     return true;
                 }
@@ -448,5 +457,15 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             imm.hideSoftInputFromWindow(view.getWindowToken(), 0);
         }
     }//hideKeyboard
+
+    private void showKeyboard() {
+        //check to make sure no view has focus
+        View view = this.getCurrentFocus();
+
+        if (view != null) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+        }
+    }//showKeyboard
 
 }//class

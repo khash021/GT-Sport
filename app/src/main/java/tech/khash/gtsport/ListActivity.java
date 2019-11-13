@@ -18,7 +18,7 @@ import tech.khash.gtsport.Adapter.ScoreListAdapter;
 import tech.khash.gtsport.Model.Score;
 import tech.khash.gtsport.Utils.SaveLoad;
 
-public class ListActivity extends AppCompatActivity implements ScoreListAdapter.ListLongClickListener {
+public class ListActivity extends AppCompatActivity implements ScoreListAdapter.ListClickListener {
 
     RecyclerView recyclerView;
     ScoreListAdapter adapter;
@@ -57,7 +57,7 @@ public class ListActivity extends AppCompatActivity implements ScoreListAdapter.
     }//onBackPressed
 
     @Override
-    public void onLongClick(int position) {
+    public void onClick(int position) {
         Score score = scores.get(position);
 
         Gson gson = new Gson();
