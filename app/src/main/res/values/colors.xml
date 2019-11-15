@@ -12,6 +12,7 @@
     <!--Button-->
     <color name="button">#d752ff</color>
 
+    <color name="fia_background">#E3F4FF</color>
 
     <color name="background3">#90caf9</color>
     <color name="color_light">#D2EDF8</color>

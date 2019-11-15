@@ -7,7 +7,7 @@ import tech.khash.gtsport.Model.Score;
 public class CreateCSV {
 
     public static String getCsv(ArrayList<Score> scores) {
-        String output = "Dr-rating, DR-delta, Sr-Rating, Sr-Delta, Start Position, End Position, Position-Delta, Clean, Epoch\n";
+        String output = "Dr-rating, DR-delta, Sr-Rating, Sr-Delta, Start Position, End Position, Position-Delta, Clean, Fia, Epoch\n";
         for (Score score : scores) {
             output += createLine(score);
         }//for
@@ -63,10 +63,18 @@ public class CreateCSV {
             positionDeltaString = "-1";
         }
 
+        Boolean fia = score.getFiaTournament();
+        String fiaString = "";
+        if (fia != null) {
+            fiaString = (fia) ? "1" : "0";
+        } else {
+            fiaString = "-1";
+        }
+
         long epoch = score.getEpoch();
         String output = score.getDr() + "," + drDeltaString + "," + score.getSr() + "," +
                 srDeltaString + "," + startPositionString + "," + finishPositionString + "," +
-                positionDeltaString + "," + cleanString + "," + epoch + "\n";
+                positionDeltaString + "," + cleanString + "," + fiaString + "," + epoch + "\n";
         return output;
     }//createLine
 }

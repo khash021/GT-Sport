@@ -35,10 +35,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
     private static final String TAG = EditActivity.class.getSimpleName();
 
     private Score currentScore;
-    private Boolean isClean = null, hasPenalty = null;
+    private Boolean isClean = null, hasPenalty = null, isFia = null;
     private EditText editstart, editFinish, editPenalty;
     private TextView textPositionDelta, textDr, textSr, textDrDelta, textSrDelta;
-    private ImageView imageDr, imageSr, imagePosition;
+    private ImageView imageDr, imageSr, imagePosition, imageFia, imageClean;
     private Integer startPosition = null, finishPosition = null, positionDelta = null;
     private boolean unsavedChanges = false;
     private Float penaltyFloat = null;
@@ -66,6 +66,8 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         textSrDelta = findViewById(R.id.text_sr_delta);
         imageDr = findViewById(R.id.image_dr);
         imageSr = findViewById(R.id.image_sr);
+        imageFia = findViewById(R.id.image_fia);
+        imageClean = findViewById(R.id.image_clean);
 
         textPositionDelta = findViewById(R.id.text_position);
         imagePosition = findViewById(R.id.image_position_delta);
@@ -123,19 +125,71 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         //checkbox
+        CheckBox fiaCheck = findViewById(R.id.check_fia);
         CheckBox cleanBox = findViewById(R.id.check_clean);
+
+        Boolean fia = currentScore.getFiaTournament();
+        if (fia != null) {
+            fiaCheck.setChecked(fia);
+            if (fia) {
+                imageFia.setVisibility(View.VISIBLE);
+            }
+        }
+
+        Boolean clean = currentScore.isClean();
+        if (clean != null) {
+            cleanBox.setChecked(clean);
+            if (clean) {
+                imageClean.setVisibility(View.VISIBLE);
+            }
+        }
+
         cleanBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideKeyboard();
                 isClean = isChecked;
                 unsavedChanges = true;
+                if (isChecked) {
+                    //fade-in
+                    if (!checkVisibility(imageClean)) {
+                        imageClean.setVisibility(View.VISIBLE);
+                    }
+                    MainActivity.animateViewFadeIn(EditActivity.this, imageClean);
+                } else {
+                    //fade-out
+                    if (!checkVisibility(imageClean)) {
+                        imageClean.setVisibility(View.VISIBLE);
+                    }
+                    MainActivity.animateViewFadeOut(EditActivity.this, imageClean);
+                }
             }
         });
-        Boolean clean = currentScore.isClean();
-        if (clean != null) {
-            cleanBox.setChecked(clean);
-        }
+
+
+
+        fiaCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                hideKeyboard();
+                isFia = isChecked;
+                unsavedChanges = true;
+                if (isChecked) {
+                    //fade-in
+                    if (!checkVisibility(imageFia)) {
+                        imageFia.setVisibility(View.VISIBLE);
+                    }
+                    MainActivity.animateViewFadeIn(EditActivity.this, imageFia);
+                } else {
+                    //fade-out
+                    if (!checkVisibility(imageFia)) {
+                        imageFia.setVisibility(View.VISIBLE);
+                    }
+                    MainActivity.animateViewFadeOut(EditActivity.this, imageFia);
+                }
+            }
+        });
+
 
         final CheckBox penaltyCheck = findViewById(R.id.check_penalty);
         penaltyCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
@@ -191,7 +245,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         editstart.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
-                if(actionId == 0 || actionId== EditorInfo.IME_ACTION_DONE) {
+                if (actionId == 0 || actionId == EditorInfo.IME_ACTION_DONE) {
                     editFinish.requestFocus();
                 }
                 return false;
@@ -382,6 +436,10 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }//if-else null penalty
         }
 
+        if (isFia != null) {
+            currentScore.setFiaTournament(isFia);
+        }
+
         SaveLoad.replaceScoreInDb(this, currentScore);
 
         Intent intent = new Intent(EditActivity.this, ListActivity.class);
@@ -464,8 +522,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         if (view != null) {
             InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED, 0);
         }
     }//showKeyboard
+
+    private boolean checkVisibility(View view) {
+        return view.getVisibility() == View.VISIBLE;
+    }
 
 }//class

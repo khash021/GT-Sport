@@ -120,29 +120,69 @@
 
     </LinearLayout>
 
-    <CheckBox
-        android:id="@+id/check_clean"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/container_clean_fia"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:fontFamily="sans-serif"
-        android:text="Clean Race"
-        android:textColor="@color/grey"
-        android:textSize="24sp"
-        android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="@id/image_clean"
-        app:layout_constraintEnd_toStartOf="@id/image_clean"
-        app:layout_constraintStart_toStartOf="parent" />
-
-    <ImageView
-        android:id="@+id/image_clean"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
         android:layout_marginTop="12dp"
-        android:scaleType="fitCenter"
-        android:src="@drawable/clean_star"
+        android:padding="6dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@id/check_clean"
-        app:layout_constraintTop_toBottomOf="@id/text_sr" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/text_sr">
+
+        <CheckBox
+            android:id="@+id/check_clean"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="Clean"
+            android:textColor="@color/grey"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/image_clean"
+            app:layout_constraintEnd_toStartOf="@id/image_clean"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <ImageView
+            android:id="@+id/image_clean"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/clean_star"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            app:layout_constraintStart_toEndOf="@id/check_clean"
+            app:layout_constraintBottom_toBottomOf="@id/check_clean"/>
+
+        <CheckBox
+            android:id="@+id/check_fia"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif"
+            android:text="FIA"
+            android:textColor="@color/grey"
+            android:textSize="24sp"
+            android:textStyle="bold"
+            app:layout_constraintBottom_toBottomOf="@id/check_clean"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/image_clean" />
+
+        <ImageView
+            android:id="@+id/image_fia"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:scaleType="fitCenter"
+            android:visibility="invisible"
+            tools:visibility="visible"
+            android:src="@drawable/fia_logo"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@+id/check_fia"
+            app:layout_constraintBottom_toBottomOf="@id/check_clean"/>
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ImageView
         android:id="@+id/image_podium"
@@ -153,7 +193,7 @@
         android:src="@drawable/podium"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/image_clean" />
+        app:layout_constraintTop_toBottomOf="@id/container_clean_fia" />
 
     <TextView
         android:id="@+id/text_start_title"

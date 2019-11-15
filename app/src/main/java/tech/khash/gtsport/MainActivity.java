@@ -225,9 +225,9 @@ public class MainActivity extends AppCompatActivity {
         }
 
         textDr.setText(currentScore.getDrString());
-        animateView(textDr);
+        animateViewFadeIn(this, textDr);
         textSr.setText(currentScore.getSrString());
-        animateView(textSr);
+        animateViewFadeIn(this, textSr);
 
         //calculate delta
         int drDelta = currentScore.getDr() - lastScore.getDr();
@@ -236,9 +236,9 @@ public class MainActivity extends AppCompatActivity {
         //show delta
         String drDeltaString = String.format(Locale.US, "%,d", drDelta);
         textDeltaDr.setText(drDeltaString);
-        animateView(textDeltaDr);
+        animateViewFadeIn(this, textDeltaDr);
         textDeltaSr.setText(String.valueOf(srDelta));
-        animateView(textDeltaSr);
+        animateViewFadeIn(this, textDeltaSr);
 
         //show arrows only if it is not 0
         if (drDelta == 0) {
@@ -250,7 +250,7 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 imageDr.setImageResource(R.drawable.down);
             }
-            animateView(imageDr);
+            animateViewFadeIn(this, imageDr);
         }//if-else = 0
 
         if (srDelta == 0) {
@@ -262,14 +262,19 @@ public class MainActivity extends AppCompatActivity {
             } else {
                 imageSr.setImageResource(R.drawable.down);
             }
-            animateView(imageSr);
+            animateViewFadeIn(this, imageSr);
         }//if-else = 0
     }//displayResults
 
-    private void animateView(View view) {
-        Animation animation = AnimationUtils.loadAnimation(this, R.anim.fadein);
+    public static void animateViewFadeIn(Context context, View view) {
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.fadein);
         view.startAnimation(animation);
-    }//animateView
+    }//animateViewFadeIn
+
+    public static void animateViewFadeOut(Context context, View view) {
+        Animation animation = AnimationUtils.loadAnimation(context, R.anim.fadeout);
+        view.startAnimation(animation);
+    }//animateViewFadeIn
 
     private int getDr(String s) {
         int sportIndex = s.indexOf("Sport Mode Performances");

@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.ArrayList;
@@ -122,6 +123,11 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
             }//if has penalty
         }//if null penalty
 
+        Boolean fia = score.getFiaTournament();
+        if (fia != null && fia) {
+            holder.rootView.setBackgroundColor(context.getResources().getColor(R.color.fia_background));
+        }
+
     }//onBindViewHolder
 
     @Override
@@ -139,6 +145,7 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
         penaltyText;
         final ImageView cleanImage, positionImage, podiumImage;
         final LinearLayout penaltyLayout;
+        final ConstraintLayout rootView;
 
         //constructor
         private ScoreViewHolder(View itemView) {
@@ -156,6 +163,7 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
             penaltyLayout = itemView.findViewById(R.id.penalty_container);
             podiumImage = itemView.findViewById(R.id.image_podium);
             penaltyText = itemView.findViewById(R.id.penalty_text);
+            rootView = itemView.findViewById(R.id.root_view);
 
             itemView.setOnClickListener(this);
         }//ScoreViewHolder

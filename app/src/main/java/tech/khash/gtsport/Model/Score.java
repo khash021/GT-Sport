@@ -13,6 +13,7 @@ public class Score {
     private Integer positionDelta = null, startPosition = null, finishPosition = null;
     private Boolean hasPenalty = null;
     private Float penalty = null;
+    private Boolean isFiaTournament = null;
 
 
     public Score() { }
@@ -78,6 +79,10 @@ public class Score {
         return penalty;
     }
 
+    public Boolean getFiaTournament() {
+        return isFiaTournament;
+    }
+
     //Setter Methods
 
     public void setSr(int sr) {
@@ -130,5 +135,9 @@ public class Score {
 
     public boolean equalsTo(Score score) {
         return score.dr == this.dr && score.sr == this.sr;
+    }
+
+    public void setFiaTournament(Boolean fiaTournament) {
+        isFiaTournament = fiaTournament;
     }
 }
