@@ -7,7 +7,8 @@ import tech.khash.gtsport.Model.Score;
 public class CreateCSV {
 
     public static String getCsv(ArrayList<Score> scores) {
-        String output = "Dr-rating, DR-delta, Sr-Rating, Sr-Delta, Start Position, End Position, Position-Delta, Clean, Fia, Epoch\n";
+        String output = "Dr-rating, DR-delta, Sr-Rating, Sr-Delta, Start Position, End Position, " +
+                "Position-Delta, Clean, hasPenalty, penalty, Fia, Epoch\n";
         for (Score score : scores) {
             output += createLine(score);
         }//for
@@ -71,10 +72,27 @@ public class CreateCSV {
             fiaString = "-1";
         }
 
+        Boolean hasPenalty = score.getHasPenalty();
+        String hasPenaltyString = "";
+        String penaltyString = "";
+        if (hasPenalty != null) {
+            hasPenaltyString = (hasPenalty) ? "1" : "0";
+            Float penalty = score.getPenalty();
+            if (penalty != null) {
+                penaltyString = String.valueOf(penalty);
+            }
+        } else {
+            hasPenaltyString = "-1";
+            penaltyString = "-1";
+        }
+
+
+
         long epoch = score.getEpoch();
         String output = score.getDr() + "," + drDeltaString + "," + score.getSr() + "," +
                 srDeltaString + "," + startPositionString + "," + finishPositionString + "," +
-                positionDeltaString + "," + cleanString + "," + fiaString + "," + epoch + "\n";
+                positionDeltaString + "," + cleanString + "," + hasPenaltyString + "," + penaltyString
+                + "," + fiaString + "," + epoch + "\n";
         return output;
     }//createLine
 }

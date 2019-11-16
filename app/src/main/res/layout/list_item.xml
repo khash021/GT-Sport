@@ -190,7 +190,7 @@
             android:layout_gravity="center_vertical"
             android:fontFamily="sans-serif"
             android:textSize="16sp"
-            android:text="+0.500"/>
+            tools:text="9.999"/>
 
 
 

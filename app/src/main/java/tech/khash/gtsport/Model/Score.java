@@ -7,7 +7,7 @@ public class Score {
 
     private int sr, dr;
     private long epoch;
-    private String date;
+    private String date = null;
     private Integer srDelta = null, drDelta = null;
     private Boolean isClean = null;
     private Integer positionDelta = null, startPosition = null, finishPosition = null;
@@ -44,7 +44,17 @@ public class Score {
     }
 
     public String getDate() {
-        return date;
+        if (date == null) {
+            if (epoch != 0) {
+                SimpleDateFormat formatter = new SimpleDateFormat("MMM.dd.yyyy - HH:mm", Locale.getDefault());
+                date = formatter.format(epoch);
+                return date;
+            } else {
+                return "";
+            }
+        } else {
+            return date;
+        }
     }
 
     public Integer getSrDelta() {
@@ -76,7 +86,10 @@ public class Score {
     }
 
     public Float getPenalty() {
-        return penalty;
+        if (hasPenalty) {
+            return penalty;
+        }
+        return null;
     }
 
     public Boolean getFiaTournament() {
@@ -84,6 +97,11 @@ public class Score {
     }
 
     //Setter Methods
+
+
+    public void setEpoch(long epoch) {
+        this.epoch = epoch;
+    }
 
     public void setSr(int sr) {
         this.sr = sr;
@@ -101,7 +119,7 @@ public class Score {
         this.drDelta = drDelta;
     }
 
-    public void setClean(boolean clean) {
+    public void setClean(Boolean clean) {
         isClean = clean;
     }
 
@@ -121,13 +139,15 @@ public class Score {
         this.date = date;
     }
 
-    public void setHasPenalty(boolean b) {
+    public void setHasPenalty(Boolean b) {
         hasPenalty = b;
     }
 
-    public void setPenalty(float f) {
+    public void setPenalty(Float f) {
         penalty = f;
     }
+
+
 
     public Boolean isClean() {
         return isClean;

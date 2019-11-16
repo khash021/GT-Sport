@@ -127,6 +127,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         //checkbox
         CheckBox fiaCheck = findViewById(R.id.check_fia);
         CheckBox cleanBox = findViewById(R.id.check_clean);
+        final CheckBox penaltyCheck = findViewById(R.id.check_penalty);
 
         Boolean fia = currentScore.getFiaTournament();
         if (fia != null) {
@@ -141,6 +142,15 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             cleanBox.setChecked(clean);
             if (clean) {
                 imageClean.setVisibility(View.VISIBLE);
+            }
+        }
+
+        final Boolean penalty = currentScore.getHasPenalty();
+        if (penalty != null) {
+            penaltyCheck.setChecked(penalty);
+            Float penaltyFloat = currentScore.getPenalty();
+            if (penaltyFloat != null) {
+                editPenalty.setText(String.valueOf(penaltyFloat));
             }
         }
 
@@ -166,8 +176,6 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
-
         fiaCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
@@ -190,13 +198,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-
-        final CheckBox penaltyCheck = findViewById(R.id.check_penalty);
         penaltyCheck.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 hideKeyboard();
-                hasPenalty = true;
+                hasPenalty = isChecked;
                 unsavedChanges = true;
 
                 //Change the color if it has penalty
@@ -208,13 +214,11 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 } else {
                     editPenalty.setText(null);
                     editPenalty.setCursorVisible(false);
+                    penaltyFloat = null;
                 }
             }
         });
-        final Boolean penalty = currentScore.getHasPenalty();
-        if (penalty != null) {
-            cleanBox.setChecked(true);
-        }
+
 
         //Edit Texts
         editstart.addTextChangedListener(new TextWatcher() {
@@ -242,6 +246,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+
         editstart.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView v, int actionId, KeyEvent event) {
@@ -423,18 +428,29 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
         }
 
         if (hasPenalty != null) {
+            //has penalty is not null
             currentScore.setHasPenalty(hasPenalty);
-            if (penaltyFloat != null) {
-                currentScore.setPenalty(penaltyFloat);
-            } else {
+
+            if (hasPenalty) {
+                //true penalty
                 try {
                     penaltyFloat = Float.valueOf(editPenalty.toString());
                     currentScore.setPenalty(penaltyFloat);
                 } catch (Exception e) {
+                    currentScore.setPenalty(null);
                     Log.d(TAG, "Error", e);
                 }
-            }//if-else null penalty
-        }
+
+            } else {
+                //false has penalty
+                penaltyFloat = null;
+                currentScore.setPenalty(penaltyFloat);
+            }
+        } else {
+            //null penalty
+            currentScore.setHasPenalty(null);
+            currentScore.setPenalty(null);
+        }//penalty
 
         if (isFia != null) {
             currentScore.setFiaTournament(isFia);
@@ -444,7 +460,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         Intent intent = new Intent(EditActivity.this, ListActivity.class);
         startActivity(intent);
-    }
+    }//save
 
     @Override
     public void onClick(View v) {

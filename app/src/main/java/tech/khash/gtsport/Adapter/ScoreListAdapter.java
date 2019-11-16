@@ -1,6 +1,9 @@
 package tech.khash.gtsport.Adapter;
 
 import android.content.Context;
+import android.text.SpannableString;
+import android.text.style.RelativeSizeSpan;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -18,6 +21,8 @@ import tech.khash.gtsport.Model.Score;
 import tech.khash.gtsport.R;
 
 public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.ScoreViewHolder> {
+
+    private static final String TAG = ScoreListAdapter.class.getSimpleName();
 
     //list of data
     private final ArrayList<Score> scores;
@@ -52,6 +57,10 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     public void onBindViewHolder(@NonNull ScoreViewHolder holder, int position) {
         //get score
         Score score = scores.get(position);
+
+        if (position == 7) {
+            String s = "salam";
+        }
 
         holder.drText.setText(score.getDrString());
         holder.srText.setText(score.getSrString());
@@ -99,8 +108,22 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
         Integer startPosition = score.getStartPosition();
         Integer finishPosition = score.getFinishPosition();
         if (startPosition != null && finishPosition != null) {
-            String details = startPosition + " --> " + finishPosition;
-            holder.positionDetailText.setText(details);
+            if (startPosition == finishPosition) {
+                holder.positionDetailText.setText(String.valueOf(startPosition));
+            } else {
+                try {
+                    String details = startPosition + "\u2192" + finishPosition;
+                    int start = details.indexOf("\u2192");
+                    int end = details.indexOf(String.valueOf(finishPosition));
+                    SpannableString ss=  new SpannableString(details);
+                    ss.setSpan(new RelativeSizeSpan(2f), start, end, 0);
+                    holder.positionDetailText.setText(ss);
+                } catch (Exception e) {
+                    Log.e(TAG, "Error Spanning text:" , e );
+                    String details = startPosition + " \u2192 " + finishPosition;
+                    holder.positionDetailText.setText(details);
+                }
+            }
         }
 
         if (finishPosition != null) {
@@ -120,12 +143,18 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
                     result = "+" + result;
                     holder.penaltyText.setText(result);
                 }//penalty float
-            }//if has penalty
-        }//if null penalty
+            } else {
+                holder.penaltyLayout.setVisibility(View.INVISIBLE);
+            }
+        } else {
+            holder.penaltyLayout.setVisibility(View.INVISIBLE);
+        }
 
         Boolean fia = score.getFiaTournament();
-        if (fia != null && fia) {
-            holder.rootView.setBackgroundColor(context.getResources().getColor(R.color.fia_background));
+        if (fia != null) {
+            if (fia) {
+                holder.rootView.setBackgroundColor(context.getResources().getColor(R.color.fia_background));
+            }
         }
 
     }//onBindViewHolder
@@ -173,6 +202,7 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
             //get the position
             int position = getLayoutPosition();
             listClickListener.onClick(position);
+            Log.d(TAG, "Index: " + position);
         }
     }//ScoreViewHolder
 

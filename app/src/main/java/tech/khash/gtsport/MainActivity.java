@@ -63,6 +63,8 @@ public class MainActivity extends AppCompatActivity {
             addData();
         }
 
+        Log.d(TAG, "\u2192");
+
         scores = new ArrayList<>();
         scores = loadScoresDb(this);
 
@@ -338,77 +340,104 @@ public class MainActivity extends AppCompatActivity {
     private void addData() {
         ArrayList<Score> scores = new ArrayList<>();
         Score score;
+        String  body = "17118,31,99,0,9,8,1,-1,-1,-1,-1,1573880626798\n" +
+                "17087,941,99,0,7,2,5,1,-1,-1,-1,1573879404700\n" +
+                "16146,724,99,0,5,4,1,-1,-1,-1,-1,1573797770950\n" +
+                "15422,763,99,0,6,4,2,1,-1,-1,-1,1573796595818\n" +
+                "14659,-801,99,0,9,14,-5,-1,-1,-1,-1,1573795396735\n" +
+                "15460,-1046,99,0,18,17,1,-1,-1,-1,1,1573704904956\n" +
+                "16506,-144,99,0,14,11,3,1,-1,-1,-1,1573628611736\n" +
+                "16650,637,99,6,3,2,1,1,-1,-1,-1,1573626237630\n" +
+                "16013,-581,93,-6,6,11,-5,-1,1,3.0,-1,1573624977304\n" +
+                "16594,723,99,0,6,5,1,-1,-1,-1,-1,1573526571633\n" +
+                "15871,371,99,0,8,7,1,1,-1,-1,-1,1573525383362\n" +
+                "15500,-666,99,0,8,13,-5,-1,-1,-1,-1,1573524188630\n" +
+                "16166,-17,99,0,15,10,5,1,-1,-1,-1,1573522963744\n" +
+                "16183,-634,99,0,12,13,-1,-1,-1,-1,-1,1573520620585\n" +
+                "16817,564,99,0,9,6,3,1,-1,-1,-1,1573519373467\n" +
+                "16253,-430,99,0,8,11,-3,-1,-1,-1,0,1573518202853\n" +
+                "16683,-902,99,0,10,15,-5,-1,-1,-1,-1,1573455705532\n" +
+                "17585,701,99,5,8,5,3,1,-1,-1,-1,1573453316358\n" +
+                "16884,23,94,-5,7,9,-2,-1,-1,-1,-1,1573449704271\n" +
+                "16861,679,99,0,8,6,2,0,-1,-1,-1,0\n" +
+                "16182,769,99,0,7,5,2,-1,-1,-1,-1,0\n" +
+                "15413,344,99,0,9,8,1,1,-1,-1,-1,0\n" +
+                "15069,210,0,0,5,5,0,-1,-1,-1,-1,0\n" +
+                "14859,587,99,0,5,4,1,-1,-1,-1,-1,0\n" +
+                "14272,963,99,0,2,1,1,1,-1,-1,-1,0";
+        ArrayList<String> strings = new ArrayList<>();
+        String newLine = System.getProperty("line.separator");
+        String[] strings1 = body.split(newLine);
+        for (int i = 0; i < strings1.length; i++) {
+            strings.add(i, strings1[i]);
+        }
 
-        score = new Score();
-        score.setDr(16861);
-        score.setSr(99);
-        score.setDate("Nov.10.2019 - 13:41");
-        score.setStartPosition(8);
-        score.setFinishPosition(6);
-        score.setPositionDelta(2);
-        score.setDrDelta(679);
-        score.setSrDelta(0);
-        scores.add(score);
+        for (String s: strings) {
+            //Dr-rating(0), DR-delta(1), Sr-Rating(2), Sr-Delta(3), Start Position(4), End Position(5),
+            //Position-Delta(6), Clean(7), hasPenalty(8), penalty(9), Fia(10), Epoch(11)
+            String[] line = s.split(",");
+            score = new Score();
 
-        score = new Score();
-        score.setDr(16182);
-        score.setSr(99);
-        score.setDate("Nov.10.2019 - 13:21");
-        score.setStartPosition(7);
-        score.setFinishPosition(5);
-        score.setPositionDelta(2);
-        score.setDrDelta(769);
-        score.setSrDelta(0);
-        scores.add(score);
+            //Dr
+            score.setDr(Integer.valueOf(line[0]));
 
-        score = new Score();
-        score.setDr(15413);
-        score.setSr(99);
-        score.setDate("Nov.10.2019 - 13:01");
-        score.setStartPosition(9);
-        score.setFinishPosition(8);
-        score.setPositionDelta(1);
-        score.setClean(true);
-        score.setDrDelta(344);
-        score.setSrDelta(0);
-        scores.add(score);
+            //DR-delta
+            score.setDrDelta(Integer.valueOf(line[1]));
 
-        score = new Score();
-        score.setDr(15069);
-        score.setSr(00);
-        score.setDate("Nov.10.2019 - 12:21");
-        score.setStartPosition(5);
-        score.setFinishPosition(5);
-        score.setPositionDelta(0);
-        score.setDrDelta(210);
-        score.setSrDelta(0);
-        scores.add(score);
+            //SR
+            score.setSr(Integer.valueOf(line[2]));
 
-        score = new Score();
-        score.setDr(14859);
-        score.setSr(99);
-        score.setDate("Nov.10.2019 - 12:01");
-        score.setStartPosition(5);
-        score.setFinishPosition(4);
-        score.setPositionDelta(1);
-        score.setDrDelta(587);
-        score.setSrDelta(0);
-        scores.add(score);
+            //SR-delta
+            score.setSrDelta(Integer.valueOf(line[3]));
 
-        score = new Score();
-        score.setDr(14272);
-        score.setSr(99);
-        score.setDate("Nov.10.2019 - 09:57");
-        score.setStartPosition(2);
-        score.setFinishPosition(1);
-        score.setPositionDelta(1);
-        score.setDrDelta(963);
-        score.setSrDelta(0);
-        score.setClean(true);
-        scores.add(score);
+            //start pos
+            score.setStartPosition(Integer.valueOf(line[4]));
+
+            //finish pos
+            score.setFinishPosition(Integer.valueOf(line[5]));
+
+            //position delta
+            score.setPositionDelta(Integer.valueOf(line[6]));
+
+            //clean
+            score.setClean(getBooleanFromString(line[7]));
+
+            //has Penalty
+            score.setHasPenalty(getBooleanFromString(line[8]));
+
+            //penalty
+            score.setPenalty(getFloatFromString(line[9]));
+
+            //fia
+            score.setFiaTournament(getBooleanFromString(line[10]));
+
+            //epoch
+            score.setEpoch(Long.valueOf(line[11]));
+
+            scores.add(score);
+        }
+
 
         SaveLoad.saveScoresDb(this, scores);
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         sharedPreferences.edit().putBoolean(PREF_KEY_FIRST_TIME, false).apply();
+    }
+
+    private Boolean getBooleanFromString(String s) {
+        if (s.equalsIgnoreCase("1")) {
+            return true;
+        } else if (s.equalsIgnoreCase("0")) {
+            return false;
+        } else {
+            return null;
+        }
+    }//getBooleanFromString
+
+    private Float getFloatFromString(String s) {
+        if (s.equalsIgnoreCase("-1")) {
+            return null;
+        } else {
+            return Float.valueOf(s);
+        }
     }
 }//class
