@@ -99,9 +99,13 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
         if (positionDelta != null) {
             holder.positionText.setText(String.valueOf(positionDelta));
             if (positionDelta > 0) {
+                holder.positionImage.setVisibility(View.VISIBLE);
                 holder.positionImage.setImageResource(R.drawable.up);
             } else if (positionDelta < 0) {
+                holder.positionImage.setVisibility(View.VISIBLE);
                 holder.positionImage.setImageResource(R.drawable.down);
+            } else if (positionDelta == 0) {
+                holder.positionImage.setVisibility(View.INVISIBLE);
             }
         }
 
@@ -115,11 +119,11 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
                     String details = startPosition + "\u2192" + finishPosition;
                     int start = details.indexOf("\u2192");
                     int end = details.indexOf(String.valueOf(finishPosition));
-                    SpannableString ss=  new SpannableString(details);
+                    SpannableString ss = new SpannableString(details);
                     ss.setSpan(new RelativeSizeSpan(2f), start, end, 0);
                     holder.positionDetailText.setText(ss);
                 } catch (Exception e) {
-                    Log.e(TAG, "Error Spanning text:" , e );
+                    Log.e(TAG, "Error Spanning text:", e);
                     String details = startPosition + " \u2192 " + finishPosition;
                     holder.positionDetailText.setText(details);
                 }
@@ -151,10 +155,10 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
         }
 
         Boolean fia = score.getFiaTournament();
-        if (fia != null) {
-            if (fia) {
-                holder.rootView.setBackgroundColor(context.getResources().getColor(R.color.fia_background));
-            }
+        if (fia == null || !fia) {
+            holder.rootView.setBackgroundColor(context.getResources().getColor(R.color.white));
+        } else {
+            holder.rootView.setBackgroundColor(context.getResources().getColor(R.color.fia_background));
         }
 
     }//onBindViewHolder
@@ -168,10 +172,10 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
     }//getItemCount
 
     //Inner class for the view holder
-    class ScoreViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+    class ScoreViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         //our views
         final TextView drText, srText, dateText, positionText, positionDetailText, srDelta, drDelta,
-        penaltyText;
+                penaltyText;
         final ImageView cleanImage, positionImage, podiumImage;
         final LinearLayout penaltyLayout;
         final ConstraintLayout rootView;
