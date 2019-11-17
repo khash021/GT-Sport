@@ -135,6 +135,10 @@ public class MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(MainActivity.this, ListActivity.class);
                 startActivity(intent);
                 return true;
+            case R.id.action_chart:
+                Intent chartIntent = new Intent(MainActivity.this, MPChartActivity.class);
+                startActivity(chartIntent);
+                return true;
             case R.id.action_export:
                 String body = getCsv(scores);
                 String title = "GT Sport export - ";

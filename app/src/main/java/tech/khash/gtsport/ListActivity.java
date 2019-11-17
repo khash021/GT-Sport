@@ -2,6 +2,8 @@ package tech.khash.gtsport;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.view.Menu;
+import android.view.MenuItem;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.ActionBar;
@@ -55,6 +57,26 @@ public class ListActivity extends AppCompatActivity implements ScoreListAdapter.
         Intent intent = new Intent(ListActivity.this, MainActivity.class);
         startActivity(intent);
     }//onBackPressed
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu_main; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_list, menu);
+        return true;
+    }//onCreateOptionsMenu
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        switch (id) {
+            case R.id.action_chart:
+                Intent chartIntent = new Intent(ListActivity.this, MPChartActivity.class);
+                startActivity(chartIntent);
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }//switch
+    }//onOptionsItemSelected
 
     @Override
     public void onClick(int position) {
