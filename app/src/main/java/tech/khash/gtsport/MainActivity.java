@@ -22,6 +22,14 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ShareCompat;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
+import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
 import org.jsoup.nodes.Element;
 import org.jsoup.select.Elements;
@@ -34,7 +42,6 @@ import java.util.Calendar;
 import java.util.Locale;
 
 import tech.khash.gtsport.Model.Score;
-import tech.khash.gtsport.Utils.DocAsynkLoader;
 import tech.khash.gtsport.Utils.SaveLoad;
 
 import static tech.khash.gtsport.Utils.CreateCSV.getCsv;
@@ -50,6 +57,8 @@ public class MainActivity extends AppCompatActivity {
     private Score currentScore, lastScore;
     private ProgressBar progressBar;
     private static final String PREF_KEY_FIRST_TIME = "pref-key-first-time";
+
+    private RequestQueue requestQueue;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -92,6 +101,20 @@ public class MainActivity extends AppCompatActivity {
     }//onCreate
 
     @Override
+    protected void onStop() {
+        super.onStop();
+        if (requestQueue != null) {
+            requestQueue.cancelAll(TAG);
+        }
+    }//onStop
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        getData();
+    }//onResume
+
+    @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu_main; this adds items to the action bar if it is present.
         getMenuInflater().inflate(R.menu.menu_main, menu);
@@ -131,29 +154,36 @@ public class MainActivity extends AppCompatActivity {
     }//onOptionsItemSelected
 
     private void getData() {
-        //load the page in the background
-        DocAsynkLoader docLoader = new DocAsynkLoader(new DocAsynkLoader.AsyncResponse() {
+        // Instantiate the RequestQueue.
+        requestQueue = Volley.newRequestQueue(this);
+        String url = "https://www.kudosprime.com/gts/stats.php?profile=7793649#dr";
+
+        // Request a string response from the provided URL.
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, url,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        //get rid of progress bar
+                        progressBar.setVisibility(View.GONE);
+                        //Convert to Document and get data
+                        Document document = Jsoup.parse(response);
+                        getScore(document);
+                    }
+                }, new Response.ErrorListener() {
             @Override
-            public void processFinish(Document doc) {
-                //extract the data
-                getSource(doc);
+            public void onErrorResponse(VolleyError error) {
+                progressBar.setVisibility(View.GONE);
+                Toast.makeText(MainActivity.this, "Error: cod-" +
+                        error.networkResponse.statusCode, Toast.LENGTH_SHORT).show();
             }
         });
+        //set tag to cancel on stop
+        stringRequest.setTag(TAG);
+        // Add the request to the RequestQueue.
+        requestQueue.add(stringRequest);
         //start task and show progressbar
         progressBar.setVisibility(View.VISIBLE);
-        docLoader.execute("https://www.kudosprime.com/gts/stats.php?profile=7793649#dr");
     }//getData
-
-    private void getSource(Document doc) {
-        //remove progressbar
-        progressBar.setVisibility(View.GONE);
-        //check for errors the data is empty
-        if (doc == null) {
-            Toast.makeText(this, "ERROR", Toast.LENGTH_SHORT).show();
-        } else {
-            getScore(doc);
-        }//if-else
-    }//getSource
 
     private void getScore(Document doc) {
         if (doc == null) {
