@@ -1,9 +1,12 @@
 package tech.khash.gtsport;
 
+import android.Manifest;
+import android.app.Activity;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -20,7 +23,7 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ShareCompat;
+import androidx.core.app.ActivityCompat;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -36,15 +39,14 @@ import org.jsoup.select.Elements;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Locale;
 
 import tech.khash.gtsport.Model.Score;
+import tech.khash.gtsport.Utils.CreateCSV;
 import tech.khash.gtsport.Utils.SaveLoad;
 
-import static tech.khash.gtsport.Utils.CreateCSV.getCsv;
 import static tech.khash.gtsport.Utils.SaveLoad.deleteDb;
 import static tech.khash.gtsport.Utils.SaveLoad.loadScoresDb;
 
@@ -140,18 +142,23 @@ public class MainActivity extends AppCompatActivity {
                 startActivity(chartIntent);
                 return true;
             case R.id.action_export:
-                String body = getCsv(scores);
-                String title = "GT Sport export - ";
-                long millis = Calendar.getInstance().getTimeInMillis();
-                SimpleDateFormat formatter = new SimpleDateFormat("MMM.dd.yyyy - HH:mm", Locale.getDefault());
-                String date = formatter.format(millis);
-                title += date;
-                ShareCompat.IntentBuilder.from(this)
-                        .setType("text/plain")
-                        .setChooserTitle("Export GT Sport data")
-                        .setSubject(title)
-                        .setText(body)
-                        .startChooser();
+//                String body = getCsv(scores);
+//                String title = "GT Sport export - ";
+//                long millis = Calendar.getInstance().getTimeInMillis();
+//                SimpleDateFormat formatter = new SimpleDateFormat("MMM.dd.yyyy - HH:mm", Locale.getDefault());
+//                String date = formatter.format(millis);
+//                title += date;
+//                ShareCompat.IntentBuilder.from(this)
+//                        .setType("text/plain")
+//                        .setChooserTitle("Export GT Sport data")
+//                        .setSubject(title)
+//                        .setText(body)
+//                        .startChooser();
+                CreateCSV.saveCsvFileStorage(this,scores, CreateCSV.SHARE_FILE);
+                return true;
+            case R.id.action_create_file:
+                CreateCSV.saveCsvFileStorage(this,scores, CreateCSV.SAVE_FILE);
+                return true;
             default:
                 return super.onOptionsItemSelected(item);
         }//switch
@@ -374,7 +381,7 @@ public class MainActivity extends AppCompatActivity {
     private void addData() {
         ArrayList<Score> scores = new ArrayList<>();
         Score score;
-        String  body = "17118,31,99,0,9,8,1,-1,-1,-1,-1,1573880626798\n" +
+        String body = "17118,31,99,0,9,8,1,-1,-1,-1,-1,1573880626798\n" +
                 "17087,941,99,0,7,2,5,1,-1,-1,-1,1573879404700\n" +
                 "16146,724,99,0,5,4,1,-1,-1,-1,-1,1573797770950\n" +
                 "15422,763,99,0,6,4,2,1,-1,-1,-1,1573796595818\n" +
@@ -406,7 +413,7 @@ public class MainActivity extends AppCompatActivity {
             strings.add(i, strings1[i]);
         }
 
-        for (String s: strings) {
+        for (String s : strings) {
             //Dr-rating(0), DR-delta(1), Sr-Rating(2), Sr-Delta(3), Start Position(4), End Position(5),
             //Position-Delta(6), Clean(7), hasPenalty(8), penalty(9), Fia(10), Epoch(11)
             String[] line = s.split(",");
@@ -474,4 +481,15 @@ public class MainActivity extends AppCompatActivity {
             return Float.valueOf(s);
         }
     }
+
+    public static boolean hasFilePermission(Activity activity) {
+        return activity.checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_GRANTED;
+    }
+
+    public static void getPermission(Activity activity) {
+        ActivityCompat.requestPermissions(activity, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+                1);
+    }
+
+
 }//class

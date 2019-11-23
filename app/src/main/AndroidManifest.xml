@@ -3,6 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="tech.khash.gtsport">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -34,6 +38,19 @@
         <activity android:name=".MPChartActivity"
             android:label="Chart View"
             android:parentActivityName=".MainActivity"/>
+
+        <provider
+            android:authorities="tech.khash.gtsport"
+            android:name="androidx.core.content.FileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+<!--        android:authorities="com.example.prov"-->
+<!--        android:grantUriPermissions="true"-->
+
     </application>
 
     <uses-permission android:name="android.permission.INTERNET" />
