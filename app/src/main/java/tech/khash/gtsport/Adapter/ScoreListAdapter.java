@@ -58,10 +58,6 @@ public class ScoreListAdapter extends RecyclerView.Adapter<ScoreListAdapter.Scor
         //get score
         Score score = scores.get(position);
 
-        if (position == 7) {
-            String s = "salam";
-        }
-
         holder.drText.setText(score.getDrString());
         holder.srText.setText(score.getSrString());
         holder.dateText.setText(score.getDate());

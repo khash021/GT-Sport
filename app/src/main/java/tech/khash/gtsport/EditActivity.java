@@ -147,10 +147,12 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
 
         final Boolean penalty = currentScore.getHasPenalty();
         if (penalty != null) {
+            hasPenalty = penalty;
             penaltyCheck.setChecked(penalty);
-            Float penaltyFloat = currentScore.getPenalty();
-            if (penaltyFloat != null) {
-                editPenalty.setText(String.valueOf(penaltyFloat));
+            Float penaltyFloatScore = currentScore.getPenalty();
+            if (penaltyFloatScore != null) {
+                editPenalty.setText(String.valueOf(penaltyFloatScore));
+                penaltyFloat = penaltyFloatScore;
             }
         }
 
@@ -434,7 +436,7 @@ public class EditActivity extends AppCompatActivity implements View.OnClickListe
             if (hasPenalty) {
                 //true penalty
                 try {
-                    penaltyFloat = Float.valueOf(editPenalty.toString());
+                    penaltyFloat = Float.valueOf(editPenalty.getText().toString());
                     currentScore.setPenalty(penaltyFloat);
                 } catch (Exception e) {
                     currentScore.setPenalty(null);
